@@ -1,0 +1,47 @@
+#默认使用配置
+spring:
+  profiles:
+    active: dev
+
+#公共配置与profiles选择无关
+mybatis:
+  typeAliasesPackage: com.cy.demo.entity
+  mapperLocations: classpath:mapper/*.xml
+
+---
+#开发配置
+spring:
+  profiles: dev
+
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/shanzu?useSSL=false&useUnicode=true&characterEncoding=utf8
+    username: root
+    password:
+
+mapper:
+  mappers: com.cy.demo.base.BaseMapper
+  mapper.identity: MYSQL
+
+#分页插件
+pagehelper:
+  helperDialect: mysql
+  reasonable: true
+  supportMethodsArguments: true
+  params: count:countSql
+
+#Tomcat配置
+server:
+  port: 8080
+
+  servlet:
+    # 配置默认访问路径，默认为/
+    context-path: /test
+    session:
+      #      超时时间单位为秒
+      timeout: 3s
+
+  tomcat:
+    uri-encoding: UTF-8
+    # 配置最大线程数
+    max-threads: 1000
