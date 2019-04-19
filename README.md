@@ -1,4 +1,4 @@
-#demo整合springboot，mybatis，swagger，通过mapper等
+# demo整合springboot，mybatis，swagger，通过mapper等
 
 ## 参考资料(供参考)：
  >+ [intellij idea创建springboot整合mybatis项目](https://blog.csdn.net/qq_28092563/article/details/79853329)
