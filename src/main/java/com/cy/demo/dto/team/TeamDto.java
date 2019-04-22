@@ -3,7 +3,6 @@ package com.cy.demo.dto.team;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
-import java.util.Date;
 
 public class TeamDto implements Serializable {
     @ApiModelProperty(value = "队伍名称", name = "teamName")
@@ -16,17 +15,16 @@ public class TeamDto implements Serializable {
     private Integer userId;
 
     @ApiModelProperty(value = "集合时间", name = "gatherTime")
-    private Date gatherTime;
+    private String gatherTime;
 
     @ApiModelProperty(value = "集合地点", name = "gathierPlace")
     private String gathierPlace;
 
     @ApiModelProperty(value = "开始时间", name = "startTime")
-
-    private Date startTime;
+    private String startTime;
 
     @ApiModelProperty(value = "结束时间", name = "endTime")
-    private Date endTime;
+    private String endTime;
 
     @ApiModelProperty(value = "预计人数", name = "expectNumber")
     private Integer expectNumber;
@@ -55,11 +53,11 @@ public class TeamDto implements Serializable {
         this.userId = userId;
     }
 
-    public Date getGatherTime() {
+    public String getGatherTime() {
         return gatherTime;
     }
 
-    public void setGatherTime(Date gatherTime) {
+    public void setGatherTime(String gatherTime) {
         this.gatherTime = gatherTime;
     }
 
@@ -71,19 +69,19 @@ public class TeamDto implements Serializable {
         this.gathierPlace = gathierPlace;
     }
 
-    public Date getStartTime() {
+    public String getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(Date startTime) {
+    public void setStartTime(String startTime) {
         this.startTime = startTime;
     }
 
-    public Date getEndTime() {
+    public String getEndTime() {
         return endTime;
     }
 
-    public void setEndTime(Date endTime) {
+    public void setEndTime(String endTime) {
         this.endTime = endTime;
     }
 
