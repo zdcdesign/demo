@@ -11,6 +11,7 @@ import com.cy.demo.utils.TimeCovertUtis;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.BeanUtils;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -30,10 +31,38 @@ public class TeamService implements ITeamService {
     @Resource
     private UserMapper userMapper;
 
-    //新增队伍方法
+
+    /**
+     * 新增队伍方法
+     */
     @Override
-    public void addTeam(TeamDto teamDto) {
+    public boolean addTeam(TeamDto teamDto) {
         //TODO 插入之前检查建队人是否有参加有其他冲突的，有的话建队失败
+        final Date addEndTime = TimeCovertUtis.string2Date(teamDto.getEndTime());
+        List<TeamTimeDto> teamTimeDtos = userTeamMapper.queryTime(teamDto.getUserId());
+        if (teamTimeDtos != null && teamTimeDtos.size() > 0) {
+            //判断 /不为空说明用户参加有队伍
+            boolean result = teamTimeDtos.stream().anyMatch(teamTimeDto -> {
+                return TimeCovertUtis.date2Long(addEndTime) > TimeCovertUtis.date2Long(teamTimeDto.getEndTime());
+            });
+            if (result) {
+                add(teamDto);
+                return true;
+
+            } else {
+                return false;
+            }
+
+        } else {
+            add(teamDto);
+            return true;
+        }
+    }
+
+    /**
+     * 添加方法抽取
+     */
+    private void add(TeamDto teamDto) {
         TeamEo eo = new TeamEo();
         BeanUtils.copyProperties(teamDto, eo);
         eo.setGatherTime(TimeCovertUtis.string2Date(teamDto.getGatherTime()));
@@ -87,13 +116,55 @@ public class TeamService implements ITeamService {
      * @param teamUserAddReqDto
      */
     @Override
-    public void addTeamUser(TeamUserAddReqDto teamUserAddReqDto) {
-        //TODO 再加入之前判断是否存在时间冲突 同时判断是否已经满人的情况
-        UserTeamEo userTeamEo = new UserTeamEo();
-        BeanUtils.copyProperties(teamUserAddReqDto, userTeamEo);
-        userTeamMapper.insert(userTeamEo);
-        //TODO 加入成功之后该队伍的已有人数加一
-        teamMapper.addOrIncNum(teamUserAddReqDto.getTeamId(), new String("1"));
+    public boolean addTeamUser(TeamUserAddReqDto teamUserAddReqDto) {
+        // 再加入之前判断是否存在时间冲突 同时判断是否已经满人的情况
+        //  查询要加入者是否会存在时间冲突
+        TeamEo eo = new TeamEo();
+        eo.setTeamId(teamUserAddReqDto.getTeamId());
+        eo = teamMapper.selectOne(eo);
+        final Date endTime = eo.getEndTime();
+        //查询该用户已经加入的队伍的时间段
+        List<TeamTimeDto> teamTimeDtos = userTeamMapper.queryTime(teamUserAddReqDto.getUserId());
+        if (teamTimeDtos != null && teamTimeDtos.size() > 0) {
+            //判断 /不为空说明用户参加有队伍
+            boolean result = teamTimeDtos.stream().anyMatch(teamTimeDto -> {
+                return TimeCovertUtis.date2Long(endTime) > TimeCovertUtis.date2Long(teamTimeDto.getEndTime());
+            });
+
+            if (result) {
+                //要加入的队伍的结束时间在其他队伍结束时间之后 -> 加入
+                return addIsSuccess(eo, teamUserAddReqDto);
+            } else {
+                //之前
+                return false;
+            }
+        } else {
+            //用户没有已经加入的队伍
+            return addIsSuccess(eo, teamUserAddReqDto);
+
+        }
+
+    }
+
+    /**
+     * 判断队伍是否满人了能加入与否
+     *
+     * @param eo
+     * @param teamUserAddReqDto
+     * @return
+     */
+    private boolean addIsSuccess(TeamEo eo, TeamUserAddReqDto teamUserAddReqDto) {
+        //判断队伍是否满人了
+        if (eo.getExpectNumber().equals(eo.getCurrentNumber())) {
+            return false;
+        } else {
+            UserTeamEo userTeamEo = new UserTeamEo();
+            BeanUtils.copyProperties(teamUserAddReqDto, userTeamEo);
+            userTeamMapper.insert(userTeamEo);
+            //加入成功之后该队伍的已有人数加一
+            teamMapper.addOrIncNum(teamUserAddReqDto.getTeamId(), new String("1"));
+            return true;
+        }
     }
 
     /**
@@ -118,7 +189,7 @@ public class TeamService implements ITeamService {
             UserTeamEo userTeamEo = new UserTeamEo();
             BeanUtils.copyProperties(teamUserAddReqDto, userTeamEo);
             userTeamMapper.delete(userTeamEo);
-            //TODO 同时队伍已有人数减一
+            //同时队伍已有人数减一
             teamMapper.addOrIncNum(teamUserAddReqDto.getTeamId(), null);
         }
 
@@ -166,5 +237,34 @@ public class TeamService implements ITeamService {
             infoRespDto.setPageList(teamListDto);
             return infoRespDto;
         }
+    }
+
+    /**
+     * 显示队伍中的队友
+     *
+     * @param idReqDto
+     * @return
+     */
+    @Override
+    public List<TeamUserListRespDto> queryTeamUser(IdReqDto idReqDto) {
+        List<TeamUserListRespDto> list = teamMapper.queryTeamUser(idReqDto);
+        return list;
+    }
+
+    /**
+     * 测试定时器 每隔15秒执行一次
+     */
+//    @Scheduled(cron = "0/10 * * * * ? ")
+//    private void schedulTest() {
+//        System.out.println("定时器----------");
+//    }
+
+    /**
+     * 每过半个小时检查一次看队伍是否已经过期过期设置过期标志
+     */
+    @Scheduled(cron = "* */30 * * * ? ")
+    private void schedulSetOverdue() {
+        //过期检查
+        teamMapper.queryIsOverdue();
     }
 }

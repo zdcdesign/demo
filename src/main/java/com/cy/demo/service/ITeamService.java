@@ -2,15 +2,19 @@ package com.cy.demo.service;
 
 import com.cy.demo.dto.team.*;
 
+import java.util.List;
+
 
 public interface ITeamService {
-    void addTeam(TeamDto teamDto);
+    boolean addTeam(TeamDto teamDto);
 
     TeamDetailDto queryTeamDetail(IdReqDto idReqDto);
 
-    void addTeamUser(TeamUserAddReqDto teamUserAddReqDto);
+    boolean addTeamUser(TeamUserAddReqDto teamUserAddReqDto);
 
     void deleteTeam(TeamUserAddReqDto teamUserAddReqDto);
 
     PageInfoRespDto queryAllTeam(PageQueryReqDto pageQueryReqDto);
+
+    List<TeamUserListRespDto> queryTeamUser(IdReqDto idReqDto);
 }

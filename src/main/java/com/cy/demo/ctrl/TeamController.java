@@ -21,8 +21,12 @@ public class TeamController {
     @ResponseBody
     @RequestMapping(value = "addTeam", method = RequestMethod.POST)
     public RestResponse addTeam(@RequestBody TeamDto teamDto) {
-        teamService.addTeam(teamDto);
-        return new RestResponse(0, Constant.SUCCESS);
+        if (teamService.addTeam(teamDto)) {
+            return new RestResponse(0, Constant.SUCCESS);
+        } else {
+            return new RestResponse(-1, Constant.FAILURE);
+        }
+
     }
 
     @ApiOperation(value = "查看队伍信息")
@@ -36,8 +40,12 @@ public class TeamController {
     @ResponseBody
     @RequestMapping(value = "addTeamUser", method = RequestMethod.POST)
     public RestResponse addTeamUser(@RequestBody TeamUserAddReqDto teamUserAddReqDto) {
-        teamService.addTeamUser(teamUserAddReqDto);
-        return new RestResponse(0, Constant.SUCCESS);
+        if (teamService.addTeamUser(teamUserAddReqDto)) {
+            return new RestResponse(0, Constant.SUCCESS);
+        } else {
+            return new RestResponse(-1, "加入失败！");
+        }
+
     }
 
     @ApiOperation(value = "退出队伍（如果是队长退出则解散队伍）")
@@ -53,8 +61,8 @@ public class TeamController {
     @RequestMapping(value = "queryTeamUser", method = RequestMethod.POST)
     public RestResponse queryTeamUser(@RequestBody IdReqDto idReqDto) {
 //        List<UserDto>
-        //TODO doing----
-        return new RestResponse(0, Constant.SUCCESS);
+        List<TeamUserListRespDto> teamUserList = teamService.queryTeamUser(idReqDto);
+        return new RestResponse(0, Constant.SUCCESS, teamUserList);
     }
 
     @ApiOperation(value = "查询显示队伍（条件为队伍名称、地点不进行输入查询全部）")

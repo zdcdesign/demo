@@ -1,8 +1,10 @@
 package com.cy.demo.mapper;
 
 import com.cy.demo.base.BaseMapper;
+import com.cy.demo.dto.team.IdReqDto;
 import com.cy.demo.dto.team.TeamListDto;
 import com.cy.demo.dto.team.TeamUserAddReqDto;
+import com.cy.demo.dto.team.TeamUserListRespDto;
 import com.cy.demo.entity.team.TeamEo;
 import org.apache.ibatis.annotations.Select;
 
@@ -44,23 +46,6 @@ public interface TeamMapper extends BaseMapper<TeamEo> {
             "</script>"})
     void addOrIncNum(Integer teamId, String flag);
 
-//    SELECT
-//    tu.username
-//    FROM
-//            (
-//                    SELECT
-//			*
-//                    FROM
-//                    tb_team AS tt
-//                    WHERE
-//                    tt.team_name LIKE '%球%'
-//                    OR
-//                    tt.gathier_place LIKE '口'
-//            )
-//    AS temp
-//
-//    JOIN tb_user AS tu ON temp.user_id = tu.id;
-
     /**
      * 按条件查询
      * 并分页
@@ -84,4 +69,39 @@ public interface TeamMapper extends BaseMapper<TeamEo> {
             "JOIN tb_user AS tu ON temp.user_id = tu.id;" +
             "</script>"})
     List<TeamListDto> queryByAddressOrName(String keyWord);
+
+    /**
+     * 查询队伍中的队友
+     *
+     * @param idReqDto
+     */
+    @Select({"<script>" +
+            "SELECT " +
+            " id as userId, " +
+            " username as userName, " +
+            " telephone  " +
+            "FROM " +
+            "  tb_user " +
+            "WHERE " +
+            "  id IN ( " +
+            "  SELECT " +
+            "      user_id AS id " +
+            "  FROM " +
+            "      user_team " +
+            "  WHERE " +
+            "    team_id = #{teamId} " +
+            "  ); " +
+            "</script>"})
+    List<TeamUserListRespDto> queryTeamUser(IdReqDto idReqDto);
+
+    /**
+     * 设置过期状态
+     */
+    @Select({"<script>" +
+            "UPDATE tb_team " +
+            " SET overdue = 1 " +
+            " WHERE " +
+            " NOW() > end_time;" +
+            "</script>"})
+    void queryIsOverdue();
 }
