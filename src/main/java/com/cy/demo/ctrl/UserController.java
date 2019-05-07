@@ -115,7 +115,7 @@ public class UserController {
 
     @ApiOperation(value = "图片上传")
     @ResponseBody
-    @RequestMapping("/uploadImg")
+    @RequestMapping(value = "/uploadImg" , method = RequestMethod.GET)
     public RestResponse uploadPicture(HttpServletRequest request) throws Exception {
         System.out.println("进入get方法！");
         //获取从前台传过来得图片
