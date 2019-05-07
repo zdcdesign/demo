@@ -3,7 +3,9 @@ package com.cy.demo.mapper;
 import com.cy.demo.base.BaseMapper;
 import com.cy.demo.entity.team.TeamEo;
 import com.cy.demo.entity.team.UserEo;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 import java.util.List;
 
@@ -49,4 +51,24 @@ public interface UserMapper extends BaseMapper<UserEo> {
             "SELECT b.* FROM tb_user a,tb_team b,user_team c WHERE a.id=c.user_id AND c.team_id=b.team_id AND a.id=#{id}" +
             "</script>"})
     List<TeamEo> querycurrentTeamByUserId(Integer id);
+
+    /**
+     *
+     * @param lat
+     * @param lon
+     * @param id
+     */
+    @Select({"<script>" +
+            "UPDATE tb_user" +
+            " SET latitude = #{lat}," +
+            " longitude = #{lon} " +
+            "WHERE " +
+            " id = #{id}" +
+            "</script>"})
+    void updateUserById(@Param("lat") Double lat, @Param("lon") Double lon, @Param("id")Integer id);
+
+    @Select({"<script>" +
+            "select * from tb_user where telephone = #{telephone};" +
+            "</script>"})
+    UserEo queryUserByTelephone(String telephone);
 }
