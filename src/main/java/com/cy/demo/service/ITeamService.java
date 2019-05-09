@@ -17,4 +17,6 @@ public interface ITeamService {
     PageInfoRespDto queryAllTeam(PageQueryReqDto pageQueryReqDto);
 
     List<TeamUserListRespDto> queryTeamUser(IdReqDto idReqDto);
+
+    List<TeamListQueryByIdRespDto> queryListById(IdReqDto idReqDto);
 }

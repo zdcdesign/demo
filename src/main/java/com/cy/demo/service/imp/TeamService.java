@@ -251,6 +251,11 @@ public class TeamService implements ITeamService {
         return list;
     }
 
+    @Override
+    public List<TeamListQueryByIdRespDto> queryListById(IdReqDto idReqDto) {
+        return teamMapper.queryListById(idReqDto);
+    }
+
     /**
      * 测试定时器 每隔15秒执行一次
      */

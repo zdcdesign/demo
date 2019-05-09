@@ -72,4 +72,16 @@ public class TeamController {
         PageInfoRespDto teamList = teamService.queryAllTeam(pageQueryReqDto);
         return new RestResponse(0, Constant.SUCCESS, teamList);
     }
+
+    @ApiOperation(value = "根据id查询我创建或加入的队伍")
+    @ResponseBody
+    @RequestMapping(value = "queryListById", method = RequestMethod.POST)
+    public RestResponse queryListById(@RequestBody IdReqDto idReqDto) {
+        List<TeamListQueryByIdRespDto> teamListQueryByIdRespDto = teamService.queryListById(idReqDto);
+        if (teamListQueryByIdRespDto == null && teamListQueryByIdRespDto.size() == 0) {
+            return new RestResponse(1, "没有数据！");
+        } else {
+            return new RestResponse(0, Constant.SUCCESS, teamListQueryByIdRespDto);
+        }
+    }
 }

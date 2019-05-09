@@ -18,6 +18,17 @@ public class TeamUserListRespDto implements Serializable {
     @ApiModelProperty(value = "电话", name = "telephone")
     private String telephone;
 
+    @ApiModelProperty(value = "图片", name = "img")
+    private String img;
+
+    public String getImg() {
+        return img;
+    }
+
+    public void setImg(String img) {
+        this.img = img;
+    }
+
     public Integer getUserId() {
         return userId;
     }

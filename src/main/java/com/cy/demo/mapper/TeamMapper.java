@@ -1,10 +1,7 @@
 package com.cy.demo.mapper;
 
 import com.cy.demo.base.BaseMapper;
-import com.cy.demo.dto.team.IdReqDto;
-import com.cy.demo.dto.team.TeamListDto;
-import com.cy.demo.dto.team.TeamUserAddReqDto;
-import com.cy.demo.dto.team.TeamUserListRespDto;
+import com.cy.demo.dto.team.*;
 import com.cy.demo.entity.team.TeamEo;
 import org.apache.ibatis.annotations.Select;
 
@@ -79,7 +76,8 @@ public interface TeamMapper extends BaseMapper<TeamEo> {
             "SELECT " +
             " id as userId, " +
             " username as userName, " +
-            " telephone  " +
+            " telephone,  " +
+            " img " +
             "FROM " +
             "  tb_user " +
             "WHERE " +
@@ -104,4 +102,35 @@ public interface TeamMapper extends BaseMapper<TeamEo> {
             " NOW() > end_time;" +
             "</script>"})
     void queryIsOverdue();
+
+    @Select({"<script>" +
+            "SELECT " +
+            "  c.id AS userId, " +
+            "  temp.team_id AS teamId, " +
+            "  temp.team_name AS teamName, " +
+            "  c.username AS userName, " +
+            "  c.img AS img, " +
+            "  c.telephone AS telephone," +
+            "  DATE_FORMAT( " +
+            "    temp.gather_time, " +
+            "    '%Y-%m-%d %h:%m' " +
+            "  ) AS gatherTime, " +
+            "  DATE_FORMAT( " +
+            "    temp.end_time, " +
+            "    '%Y-%m-%d %h:%m' " +
+            "  ) AS endTime, " +
+            "  temp.gathier_place AS gatherPlace " +
+            "FROM " +
+            "  ( " +
+            "    SELECT " +
+            "      a.* " +
+            "    FROM " +
+            "      tb_team AS a " +
+            "    JOIN user_team AS b ON a.team_id = b.team_id " +
+            "    WHERE " +
+            "      b.user_id = #{userId} " +
+            "  ) AS temp " +
+            "JOIN tb_user AS c ON temp.user_id = c.id;" +
+            "</script>"})
+    List<TeamListQueryByIdRespDto> queryListById(IdReqDto idReqDto);
 }
