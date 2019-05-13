@@ -71,4 +71,16 @@ public interface UserMapper extends BaseMapper<UserEo> {
             "select * from tb_user where telephone = #{telephone};" +
             "</script>"})
     UserEo queryUserByTelephone(String telephone);
+
+
+    @Select({"<script>" +
+            "select * from tb_user where school = #{school};" +
+            "</script>"})
+    List<UserEo> findAroundStudent(String school);
+
+
+    @Select({"<script>" +
+            "select * from tb_user where id = #{userId};" +
+            "</script>"})
+    UserEo findById(Integer userId);
 }

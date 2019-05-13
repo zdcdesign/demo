@@ -130,7 +130,7 @@ public interface TeamMapper extends BaseMapper<TeamEo> {
             "    WHERE " +
             "      b.user_id = #{userId} " +
             "  ) AS temp " +
-            "JOIN tb_user AS c ON temp.user_id = c.id;" +
+            "JOIN tb_user AS c ON temp.user_id = c.id order by temp.team_id desc;" +
             "</script>"})
     List<TeamListQueryByIdRespDto> queryListById(IdReqDto idReqDto);
 }

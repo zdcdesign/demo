@@ -6,6 +6,7 @@ import com.cy.demo.dto.power.LoginDto;
 import com.cy.demo.dto.power.ModifyPassword;
 import com.cy.demo.dto.power.UserPositionDto;
 import com.cy.demo.dto.power.UserRegisterDto;
+import com.cy.demo.dto.team.IdReqDto;
 import com.cy.demo.entity.team.TeamEo;
 import com.cy.demo.entity.team.UserEo;
 import com.cy.demo.mapper.TeamMapper;
@@ -104,7 +105,7 @@ public class UserService implements IUserService {
            System.out.println("当前用户id:"+userEo.getId());
            userMapper.updateUserById(loginDto.getLatitude(),loginDto.getLongitude(),userEo.getId());
            System.out.println("登录逻辑执行完毕，返回登陆成功信息in");
-           return new RestResponse(0, Constant.SUCCESS);
+           return new RestResponse(0, Constant.SUCCESS,userEo);
        }catch (Exception e){
            e.printStackTrace();
            return new RestResponse(1,"登录异常");
@@ -246,5 +247,93 @@ public class UserService implements IUserService {
         }
     }
 
+    @Override
+    public RestResponse getAroundStudent(UserPositionDto userPositionDto) {
+       // getDistance(110.30924,25.06023,110.30874,25.06015);
+        try {
 
+            List<UserEo> aroundList = new ArrayList<>();
+            //UserEo userEo = (UserEo) SecurityUtils.getSubject().getPrincipal();
+
+            //List<UserEo> userList = userMapper.findAroundStudent(userEo.getSchool());
+
+            //测试用例
+            List<UserEo> userList = userMapper.findAroundStudent("广西师范大学");
+            //System.out.println(userList);
+            /*int i=0;
+            for (UserEo userEo:userList){
+                System.out.println(userEo.getUserName());
+                System.out.println(userPositionDto.getLongitude()+","+userPositionDto.getLatitude()+","+userEo.getLongitude()+","+userEo.getLatitude());
+                double distance = getDistance( userPositionDto.getLongitude(),userPositionDto.getLatitude(),userEo.getLongitude(),userEo.getLatitude());
+                System.out.println("与当前位置距离为"+distance*1000+"米");
+
+                userEo.setDistance((int) Math.ceil(distance*1000));
+                //userEo.setDistance(1500);
+                userEo.setImg("/images/"+i+".png");
+                i++;
+                aroundList.add(userEo);
+
+            }*/
+
+            for(int i = 0;i<userList.size();i++){
+
+                double distance = getDistance( userPositionDto.getLongitude(),userPositionDto.getLatitude(), userList.get(i).getLongitude(),userList.get(i).getLatitude());
+                System.out.println("与当前位置距离为"+distance*1000+"米");
+
+                userList.get(i).setDistance((int) Math.ceil(distance*1000));
+                //userEo.setDistance(1500);
+                userList.get(i).setImg("/images/"+i+".png");
+
+                aroundList.add(userList.get(i));
+            }
+
+
+            return new RestResponse(0, Constant.SUCCESS,aroundList);
+        }catch (Exception e){
+            return new RestResponse(1,"获取附近的人异常");
+        }
+
+    }
+
+    @Override
+    public RestResponse getUserById(IdReqDto idReqDto) {
+
+         UserEo userEo = userMapper.findById(idReqDto.getUserId());
+
+        return new RestResponse(0, Constant.SUCCESS,userEo);
+    }
+
+    /**
+     * 地球半径,单位 km
+     */
+    private static final double EARTH_RADIUS = 6378.137;
+
+    /**
+     * 根据经纬度，计算两点间的距离
+     *
+     * @param longitude1 第一个点的经度
+     * @param latitude1  第一个点的纬度
+     * @param longitude2 第二个点的经度
+     * @param latitude2  第二个点的纬度
+     * @return 返回距离 单位千米
+     */
+    public static double getDistance(double longitude1, double latitude1, double longitude2, double latitude2) {
+        // 纬度
+        double lat1 = Math.toRadians(latitude1);
+        double lat2 = Math.toRadians(latitude2);
+        // 经度
+        double lng1 = Math.toRadians(longitude1);
+        double lng2 = Math.toRadians(longitude2);
+        // 纬度之差
+        double a = lat1 - lat2;
+        // 经度之差
+        double b = lng1 - lng2;
+        // 计算两点距离的公式
+        double s = 2 * Math.asin(Math.sqrt(Math.pow(Math.sin(a / 2), 2) +
+                Math.cos(lat1) * Math.cos(lat2) * Math.pow(Math.sin(b / 2), 2)));
+        // 弧长乘地球半径, 返回单位: 千米
+        s =  s * EARTH_RADIUS;
+        System.out.println(s);
+        return s;
+    }
 }

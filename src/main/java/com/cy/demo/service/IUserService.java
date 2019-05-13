@@ -5,6 +5,7 @@ import com.cy.demo.dto.power.LoginDto;
 import com.cy.demo.dto.power.ModifyPassword;
 import com.cy.demo.dto.power.UserPositionDto;
 import com.cy.demo.dto.power.UserRegisterDto;
+import com.cy.demo.dto.team.IdReqDto;
 import com.cy.demo.entity.team.UserEo;
 
 /**
@@ -29,4 +30,8 @@ public interface IUserService {
     RestResponse currentTeam();
 
     RestResponse historyTeam();
+
+    RestResponse getAroundStudent(UserPositionDto userPositionDto);
+
+    RestResponse getUserById(IdReqDto idReqDto);
 }

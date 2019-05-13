@@ -3,8 +3,10 @@ package com.cy.demo.ctrl;
 import com.cy.demo.base.Constant;
 import com.cy.demo.dto.RestResponse;
 import com.cy.demo.dto.team.*;
+import com.cy.demo.entity.team.UserEo;
 import com.cy.demo.service.ITeamService;
 import io.swagger.annotations.ApiOperation;
+import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,7 +23,14 @@ public class TeamController {
     @ResponseBody
     @RequestMapping(value = "addTeam", method = RequestMethod.POST)
     public RestResponse addTeam(@RequestBody TeamDto teamDto) {
+
+        //TODO 1111111
+       // UserEo userEo = (UserEo) SecurityUtils.getSubject().getPrincipal();
+       // System.out.println(userEo.getUserName());
+       //   teamDto.setUserId(2015123);
         if (teamService.addTeam(teamDto)) {
+
+
             return new RestResponse(0, Constant.SUCCESS);
         } else {
             return new RestResponse(-1, Constant.FAILURE);

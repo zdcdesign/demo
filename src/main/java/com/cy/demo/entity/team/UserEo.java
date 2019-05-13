@@ -76,6 +76,18 @@ public class UserEo implements Serializable {
     @Column(name = "img")
     private String img;
 
+    @ApiModelProperty(value = "距离", name = "distance")
+    @Column(name = "distance")
+    private Integer distance;
+
+    public Integer getDistance() {
+        return distance;
+    }
+
+    public void setDistance(Integer distance) {
+        this.distance = distance;
+    }
+
     public String getImg() {
         return img;
     }
