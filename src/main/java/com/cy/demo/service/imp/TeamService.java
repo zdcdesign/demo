@@ -112,7 +112,7 @@ public class TeamService implements ITeamService {
         eo.setId(detailDto.getUserId());
         eo = userMapper.selectOne(eo);
         detailDto.setImg(eo.getImg() == null ? eo.getImg() : null);
-        detailDto.setUserName(eo.getUserName());
+        detailDto.setUserName(eo.getName());
         return detailDto;
     }
 
