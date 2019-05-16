@@ -4,6 +4,7 @@ import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 /**
  * 队伍详情
@@ -21,6 +22,12 @@ public class TeamDetailDto implements Serializable {
 
     @ApiModelProperty(value = "队长id", name = "userId")
     private Integer userId;
+
+    @ApiModelProperty(value = "图片", name = "img")
+    private String img;
+
+    @ApiModelProperty(value = "队长名字", name = "userName")
+    private String userName;
 
     @ApiModelProperty(value = "集合时间", name = "gatherTime")
     private String gatherTime;
@@ -51,6 +58,33 @@ public class TeamDetailDto implements Serializable {
 
     @ApiModelProperty(value = "锁定状态", name = "lockedState")
     private Integer lockedState;
+
+    //    队伍中的队员
+    private List<TeamUserListRespDto> teamUserList;
+
+    public List<TeamUserListRespDto> getTeamUserList() {
+        return teamUserList;
+    }
+
+    public String getImg() {
+        return img;
+    }
+
+    public void setImg(String img) {
+        this.img = img;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public void setTeamUserList(List<TeamUserListRespDto> teamUserList) {
+        this.teamUserList = teamUserList;
+    }
 
     public Integer getTeamId() {
         return teamId;

@@ -25,9 +25,9 @@ public class TeamController {
     public RestResponse addTeam(@RequestBody TeamDto teamDto) {
 
         //TODO 1111111
-       // UserEo userEo = (UserEo) SecurityUtils.getSubject().getPrincipal();
-       // System.out.println(userEo.getUserName());
-       //   teamDto.setUserId(2015123);
+        // UserEo userEo = (UserEo) SecurityUtils.getSubject().getPrincipal();
+        // System.out.println(userEo.getUserName());
+        //   teamDto.setUserId(2015123);
         if (teamService.addTeam(teamDto)) {
 
 
@@ -42,7 +42,10 @@ public class TeamController {
     @ResponseBody
     @RequestMapping(value = "queryTeamDetail", method = RequestMethod.POST)
     public RestResponse queryTeamDetail(@RequestBody IdReqDto idReqDto) {
-        return new RestResponse(0, Constant.SUCCESS, teamService.queryTeamDetail(idReqDto));
+        List<TeamUserListRespDto> teamUserList = teamService.queryTeamUser(idReqDto);
+        TeamDetailDto detailDto = teamService.queryTeamDetail(idReqDto);
+        detailDto.setTeamUserList(teamUserList);
+        return new RestResponse(0, Constant.SUCCESS, detailDto);
     }
 
     @ApiOperation(value = "加入队伍")

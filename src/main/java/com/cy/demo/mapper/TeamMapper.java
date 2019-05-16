@@ -54,7 +54,7 @@ public interface TeamMapper extends BaseMapper<TeamEo> {
             "tu.username as userName," +
             " temp.team_name as teamName," +
             //" temp.gather_time as gatherTime, " +
-            "DATE_FORMAT(temp.gather_time,'%Y-%m-%d %h:%m') AS gatherTime," +
+            "DATE_FORMAT(temp.gather_time,'%Y-%m-%d %h:%i') AS gatherTime," +
             "temp.gathier_place as gathierPlace " +
             "FROM( " +
             "SELECT * from tb_team AS tt " +
@@ -113,11 +113,11 @@ public interface TeamMapper extends BaseMapper<TeamEo> {
             "  c.telephone AS telephone," +
             "  DATE_FORMAT( " +
             "    temp.gather_time, " +
-            "    '%Y-%m-%d %h:%m' " +
+            "    '%Y-%m-%d %h:%i' " +
             "  ) AS gatherTime, " +
             "  DATE_FORMAT( " +
             "    temp.end_time, " +
-            "    '%Y-%m-%d %h:%m' " +
+            "    '%Y-%m-%d %h:%i' " +
             "  ) AS endTime, " +
             "  temp.gathier_place AS gatherPlace " +
             "FROM " +

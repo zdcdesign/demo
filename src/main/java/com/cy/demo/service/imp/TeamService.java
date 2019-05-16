@@ -2,6 +2,7 @@ package com.cy.demo.service.imp;
 
 import com.cy.demo.dto.team.*;
 import com.cy.demo.entity.team.TeamEo;
+import com.cy.demo.entity.team.UserEo;
 import com.cy.demo.entity.team.UserTeamEo;
 import com.cy.demo.mapper.TeamMapper;
 import com.cy.demo.mapper.UserMapper;
@@ -107,6 +108,11 @@ public class TeamService implements ITeamService {
         detailDto.setStartTime(TimeCovertUtis.date2String(teamEo.getStartTime()));
         detailDto.setEndTime(TimeCovertUtis.date2String(teamEo.getEndTime()));
         detailDto.setGatherTime(TimeCovertUtis.date2String(teamEo.getGatherTime()));
+        UserEo eo = new UserEo();
+        eo.setId(detailDto.getUserId());
+        eo = userMapper.selectOne(eo);
+        detailDto.setImg(eo.getImg() == null ? eo.getImg() : null);
+        detailDto.setUserName(eo.getUserName());
         return detailDto;
     }
 
