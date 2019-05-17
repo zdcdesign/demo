@@ -262,6 +262,11 @@ public class TeamService implements ITeamService {
         return teamMapper.queryListById(idReqDto);
     }
 
+    @Override
+    public List<TeamEo> queryTeamByType(PageQueryReqDto pageQueryReqDto) {
+        return teamMapper.queryTeamByType(pageQueryReqDto.getKeyWord());
+    }
+
     /**
      * 测试定时器 每隔15秒执行一次
      */

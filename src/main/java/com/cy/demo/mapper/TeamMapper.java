@@ -133,4 +133,10 @@ public interface TeamMapper extends BaseMapper<TeamEo> {
             "JOIN tb_user AS c ON temp.user_id = c.id order by temp.team_id desc;" +
             "</script>"})
     List<TeamListQueryByIdRespDto> queryListById(IdReqDto idReqDto);
+
+
+    @Select({"<script>" +
+           "SELECT a.* FROM tb_team a,tb_type b WHERE a.type_id = b.type_id AND b.type_name LIKE '%#{keyWord}%'"
+            +"</script>"})
+    List<TeamEo> queryTeamByType(String keyWord);
 }

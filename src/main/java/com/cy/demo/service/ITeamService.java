@@ -1,6 +1,7 @@
 package com.cy.demo.service;
 
 import com.cy.demo.dto.team.*;
+import com.cy.demo.entity.team.TeamEo;
 
 import java.util.List;
 
@@ -19,4 +20,6 @@ public interface ITeamService {
     List<TeamUserListRespDto> queryTeamUser(IdReqDto idReqDto);
 
     List<TeamListQueryByIdRespDto> queryListById(IdReqDto idReqDto);
+
+    List<TeamEo> queryTeamByType(PageQueryReqDto pageQueryReqDto);
 }

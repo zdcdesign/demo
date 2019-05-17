@@ -3,6 +3,7 @@ package com.cy.demo.ctrl;
 import com.cy.demo.base.Constant;
 import com.cy.demo.dto.RestResponse;
 import com.cy.demo.dto.team.*;
+import com.cy.demo.entity.team.TeamEo;
 import com.cy.demo.entity.team.UserEo;
 import com.cy.demo.service.ITeamService;
 import io.swagger.annotations.ApiOperation;
@@ -95,5 +96,16 @@ public class TeamController {
         } else {
             return new RestResponse(0, Constant.SUCCESS, teamListQueryByIdRespDto);
         }
+    }
+
+    @ApiOperation(value = "通过搜索条件搜索相应类型的组队")
+    @ResponseBody
+    @RequestMapping(value = "queryTeamByType", method = RequestMethod.POST)
+    public RestResponse queryTeamByType(@RequestBody PageQueryReqDto pageQueryReqDto) {
+        List<TeamEo> teamList = teamService.queryTeamByType(pageQueryReqDto);
+        for (TeamEo teamEo:teamList){
+            System.out.println("根据关键词搜索:"+teamEo.getTeamName());
+        }
+        return new RestResponse(0, Constant.SUCCESS, teamList);
     }
 }
