@@ -3,6 +3,7 @@ package com.cy.demo.mapper;
 import com.cy.demo.base.BaseMapper;
 import com.cy.demo.dto.team.*;
 import com.cy.demo.entity.team.TeamEo;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
@@ -41,7 +42,7 @@ public interface TeamMapper extends BaseMapper<TeamEo> {
             "UPDATE tb_team SET current_number = current_number - 1 WHERE team_id = #{teamId};" +
             "</if>" +
             "</script>"})
-    void addOrIncNum(Integer teamId, String flag);
+    void addOrIncNum(@Param("teamId") Integer teamId, @Param("flag") String flag);
 
     /**
      * 按条件查询
@@ -136,7 +137,7 @@ public interface TeamMapper extends BaseMapper<TeamEo> {
 
 
     @Select({"<script>" +
-           "SELECT a.* FROM tb_team a,tb_type b WHERE a.type_id = b.type_id AND b.type_name LIKE '%#{keyWord}%'"
-            +"</script>"})
+            "SELECT a.* FROM tb_team a,tb_type b WHERE a.type_id = b.type_id AND b.type_name LIKE '%#{keyWord}%'"
+            + "</script>"})
     List<TeamEo> queryTeamByType(String keyWord);
 }
