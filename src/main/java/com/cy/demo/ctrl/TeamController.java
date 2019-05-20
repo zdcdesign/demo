@@ -98,13 +98,22 @@ public class TeamController {
         }
     }
 
+    @ApiOperation(value = "所有队伍")
+    @ResponseBody
+    @RequestMapping(value = "queryAllTeam", method = RequestMethod.POST)
+    public RestResponse queryTeamByType() {
+        List<TeamListQueryByIdRespDto> teamListQueryByIdRespDto = teamService.queryAll();
+        return new RestResponse(0, Constant.SUCCESS, teamListQueryByIdRespDto);
+    }
+
+
     @ApiOperation(value = "通过搜索条件搜索相应类型的组队")
     @ResponseBody
     @RequestMapping(value = "queryTeamByType", method = RequestMethod.POST)
     public RestResponse queryTeamByType(@RequestBody PageQueryReqDto pageQueryReqDto) {
         List<TeamEo> teamList = teamService.queryTeamByType(pageQueryReqDto);
-        for (TeamEo teamEo:teamList){
-            System.out.println("根据关键词搜索:"+teamEo.getTeamName());
+        for (TeamEo teamEo : teamList) {
+            System.out.println("根据关键词搜索:" + teamEo.getTeamName());
         }
         return new RestResponse(0, Constant.SUCCESS, teamList);
     }

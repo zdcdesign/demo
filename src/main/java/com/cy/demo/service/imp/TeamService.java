@@ -12,6 +12,7 @@ import com.cy.demo.utils.TimeCovertUtis;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.BeanUtils;
+import org.springframework.context.annotation.Bean;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -265,6 +266,31 @@ public class TeamService implements ITeamService {
     @Override
     public List<TeamEo> queryTeamByType(PageQueryReqDto pageQueryReqDto) {
         return teamMapper.queryTeamByType(pageQueryReqDto.getKeyWord());
+    }
+
+    /**
+     * 查询所有
+     * @return
+     */
+    @Override
+    public List<TeamListQueryByIdRespDto> queryAll() {
+        List<TeamListQueryByIdRespDto> list = new ArrayList<>(20);
+        List<TeamEo> teamEos = teamMapper.selectAll();
+        for (TeamEo eo: teamEos) {
+            TeamListQueryByIdRespDto idRespDto = new TeamListQueryByIdRespDto();
+            BeanUtils.copyProperties(eo, idRespDto);
+            //时间格式转换
+            idRespDto.setGatherPlace(eo.getGathierPlace());
+            idRespDto.setGatherTime(TimeCovertUtis.date2String(eo.getGatherTime()));
+            idRespDto.setEndTime(TimeCovertUtis.date2String(eo.getEndTime()));
+            //用户补充信息
+            UserEo userEo = new UserEo();
+            userEo.setId(eo.getUserId());
+            userEo = userMapper.selectOne(userEo);
+            BeanUtils.copyProperties(userEo, idRespDto);
+            list.add(idRespDto);
+        }
+        return list;
     }
 
     /**
